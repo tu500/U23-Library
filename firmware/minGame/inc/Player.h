@@ -44,6 +44,7 @@ typedef struct Item{
 	int speedWalkMod;
 	int maxDepthMod;
 	int inventorySizeMod;
+	int prize;
 } Item;
 
 typedef struct Player{

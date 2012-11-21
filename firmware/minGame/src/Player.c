@@ -6,9 +6,9 @@
 ////// ITEM DEFINITIONS ////////////
 
 
-Item startShoes = {1,0,0,0,0};
-Item startPickAxe = {1,5,-3,0,0};
-Item startBackpack = {0,-1,-1,0,5};
+Item startShoes = {1,0,0,0,0,0};
+Item startPickAxe = {1,5,-3,0,0,0};
+Item startBackpack = {0,-1,-1,0,5,0};
 
 ////////////////////////////////////
 
