@@ -2,31 +2,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <List.h>
+#include <list.h>
 
 #define MAXINVENTORYSIZE 100
-
-
-
-
-// typedef enum Items{
-
-//  STARTSHOES,
-//  SLOWSHOES,
-//  FASTSHOES,
-//  TURBOSHOES,
-
-//  STARTPICKAXE,
-//  SLOWPICKAXE,
-//  FASTPICKAXE,
-//  TURBOPICKAXE,
-
-//  STARTBACKPACK,
-//  SMALLBACKPACK,
-//  MEDIUMBACKPACK,
-//  BIGBACKPACK,
-//  HUGEBACKPACK
-// } Items;
 
 
 typedef enum MineralTypes{
@@ -44,7 +22,11 @@ typedef struct Mineral{
     int value;
     int weight;
     int hp;
-
+    int prob;
+    int upper;
+    int lower;
+    const char* name;
+    const char* desc;
 
 } Mineral;
 
@@ -56,6 +38,9 @@ typedef struct Item{
     int maxDepthMod;
     int inventorySizeMod;
     int prize;
+    
+    const char* name;
+    const char* desc;
 } Item;
 
 typedef struct Player{
@@ -74,6 +59,11 @@ typedef struct Player{
 
 
 void initPlayer(Player *p);
+
+bool itemBuy(Player *p, Item *i);
+void validatePlayerValues(Player *p);
+void updateItems(Player *p);
+int getFreeInvSpace(Player *p);
 
 #endif
 
