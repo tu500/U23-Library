@@ -59,12 +59,15 @@ void initPlayer(Player *p){
     listInsert(&p->inventory, &shoesStart);
     listInsert(&p->inventory, &pickaxeStart);
     listInsert(&p->inventory, &backpackStart);
+
+    //Initialize Mineral-Array
+    memset(p->minerals, 0, sizeof(p->minerals));
 }
 
 //Buys an Item, returns true if successful
 bool itemBuy(Player *p, Item *i){
     //Check if Item is already owned
-    if(listSearch(&p->inventory, i)) return false;
+    if(listCount(&p->inventory, i) >= 1 ) return false;
     int newmoney = p->money -= i->prize;
     int newspace = getFreeInvSpace(p) - i->inventorySizeTaken;
     if( newmoney >= 0 && newspace >= 0){
@@ -75,6 +78,7 @@ bool itemBuy(Player *p, Item *i){
     }
     return false;
 }
+
 //Sells an Item, returns true if successful
 bool itemSell(Player *p, Item *i){
     if(listSearch(&p->inventory, i)){
@@ -88,6 +92,7 @@ bool itemSell(Player *p, Item *i){
 
 //Picks up a mineral, returns true if successful
 bool mineralPickup(Player *p, MineralTypes m){
+    //Mineral is of Type Earth. We Ignore
     if(m == 0) return true;
     int newspace = getFreeInvSpace(p) - mineralInfo[m].weight;
     if(newspace >= 0){
@@ -95,10 +100,12 @@ bool mineralPickup(Player *p, MineralTypes m){
         return true;
     }
     return false;
-    
 }
+
 //Sells a mineral, returns true if successful
 bool mineralSell(Player *p, MineralTypes m, int amount){
+    //Mineral is of Type Earth. We ignore
+    if(m == 0) return true;
     if(p->minerals[m] >= amount){
         p->minerals[m] -= amount;
         p->money += amount * mineralInfo[m].value;

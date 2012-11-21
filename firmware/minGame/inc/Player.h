@@ -4,11 +4,10 @@
 
 #include <list.h>
 
-#define MAXINVENTORYSIZE 100
-
 
 typedef enum MineralTypes{
 
+    MIN_EARTH,
     MIN_COAL,
     MIN_IRON,
     MIN_GOLD,
@@ -38,7 +37,7 @@ typedef struct Item{
     int maxDepthMod;
     int inventorySizeMod;
     int prize;
-    
+
     const char* name;
     const char* desc;
 } Item;
@@ -56,10 +55,7 @@ typedef struct Player{
 
 } Player;
 
-
-
 void initPlayer(Player *p);
-
 bool itemBuy(Player *p, Item *i);
 void validatePlayerValues(Player *p);
 void updateItems(Player *p);
