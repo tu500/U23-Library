@@ -2,6 +2,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <List.h>
+
 #define MAXINVENTORYSIZE 100
 
 
@@ -64,7 +66,7 @@ typedef struct Player{
     int inventorySize;
     int money;
 
-    Item* inventory[MAXINVENTORYSIZE];
+    list inventory;
     int minerals[MINERALCOUNT];
 
 } Player;
