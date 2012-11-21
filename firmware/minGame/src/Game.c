@@ -7,7 +7,6 @@
 
 #include "Player.h"
 
-#define MAXINVENTORYSIZE 100
 
 void Init(struct Gamestate*);
 void OnEnter(struct Gamestate* state);
