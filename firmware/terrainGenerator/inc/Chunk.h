@@ -31,6 +31,7 @@ struct chunk
 	int seed;
 	int x;
 	int y;
+        int height;
 	struct tile tiles[9*9];
 };
 
@@ -41,3 +42,9 @@ void calculateMinerals(struct chunk *c);
 void generate(int rX, int rY, int maxNum, int iD, struct chunk *c);
 int GetNewRandomInt();
 static inline int genRand(int seed, int x, int y);
+
+
+// TODO:
+// Load / save chunks from / to sdcard
+// struct Chunk *loadChunk(int x, int y, int height);
+// void saveChunk(Chunk *c);
