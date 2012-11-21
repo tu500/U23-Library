@@ -13,9 +13,9 @@ static inline int genRand(int seed, int x, int y)
 #define chunkSizeSide 9
 #define chunkSize chunkSizeSide*chunkSizeSide
 
-#define randCoal 10
-#define randIron 30
-#define randGold 70
+#define randCoal 100
+#define randIron 50
+#define randGold 4
 
 #define mineralsCount 10
 

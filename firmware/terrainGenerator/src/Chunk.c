@@ -86,10 +86,56 @@ void calculateMinerals(struct chunk *c)
 	//c.tiles[0].iD = 1;
 }
 
-void calcMineral(struct tile *tile, int seed)
+void calcMineral(struct tile *t, int seed)
 {
-	int r = genRand(seed, tile->x, tile->y) % 3;
-	tile->iD = r;
+	int r = genRand(seed, t->x, t->y) % 3;
+	t->iD = r;
+}
+
+void calcAdditional(struct tile *t, struct chunk *c, int *rands, int iD)
+{
+	int count = 0;
+
+	do
+	{
+		int rX = (genRand(c->seed+count, t->x, t->y) % 3) - 1;
+		int rY = (genRand(c->seed-count, t->x, t->y) % 3) - 1;
+
+		int index = ((t->y)*chunkSizeSide)+t->x;
+		index += rY*chunkSizeSide;
+		index += rX;
+
+		if(index >= chunkSize)
+		{
+			count++;
+			continue;
+		}
+
+		struct tile *t2 = &c->tiles[index];
+		t2->iD = iD;
+		
+		count++;
+	}while((genRand(c->seed, t->x, t->y) % 1000) < (rands[iD]/2) && count < mineralsCount);
+}
+
+void calcMin(struct chunk *c)
+{
+	int size = 3;
+	int randArray[size]; 	randArray[0] = randCoal; randArray[1] = randIron; randArray[2] = randGold;
+
+	for(int i = 0; i < 9*9; i++)
+	{
+		struct tile *t = &c->tiles[i];
+		if(t == NULL) continue;
+
+		int type = genRand(c->seed, t->x, t->y) % size;
+		
+		if(type < size && (genRand(c->seed, t->x, t->y) % 1000) < randArray[type])
+		{
+			t->iD = type + 1;
+			calcAdditional(t, c, randArray, type+1);
+		}
+	}
 }
 
 struct chunk genNewChunk(int x, int y, int seed)
@@ -113,15 +159,18 @@ struct chunk genNewChunk(int x, int y, int seed)
 			t.x = (int)(i+x);
 			t.y = (int)(j+y);
 
+			//t.iD = genRand(seed, t.x+c.x, t.y+c.y) % 3;
 			t.iD = 0;
 
-			c.tiles[index] = (struct tile)t;
+			//calcMineral(&t, c.seed);
 
-			calcMineral(&t, c.seed);
+			c.tiles[index] = (struct tile)t;
 
 			index++;
 		}
 	}
+
+	calcMin(&c);
 
 	//calculateMinerals(&c);
 
@@ -134,7 +183,7 @@ Pixel getRGBFromiD(int iD)
 {
 	switch(iD)
 	{
-		case 0: return RGB(130, 50, 0);
+		case 0: return RGB(100, 100, 100);
 		case 1: return RGB(40, 40, 40);
 		case 2: return RGB(150, 150, 150);
 		case 3: return RGB(50, 230, 255);
@@ -153,7 +202,7 @@ void drawChunk(Bitmap *b, struct chunk c)
 
 		setFont(fontwhite8);
 		char *highscoreString;
-		asprintf(&highscoreString, "%d", countII);
+		asprintf(&highscoreString, "%d", genRand(c.seed, 1, 5) % 3);
 
 		//DrawText(b, highscoreString, 10, 180);
 

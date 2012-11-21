@@ -9,6 +9,7 @@
 #include <game/Font.h>
 #include "../inc/Chunk.h"
 #include "../inc/World.h"
+#include <TiledMap.h>
 
 void Init(struct Gamestate*);
 void OnEnter(struct Gamestate* state);
@@ -23,13 +24,28 @@ Game* TheGame = &(Game) {&InitState};
 struct world *myWorld; 
 //struct chunk *c;
 
+TiledMap *map;
+MapObject player;
+
+bool playerCollision(MapObject *obj, MapObject *target)
+{
+
+}
+
 void Init(struct Gamestate* state)
 {
 	myWorld = genNewWorld();
 
-	//int in = genRand(666, 10, 10);
+	map = TiledMap_init(0, 0, 0, NULL);
 
-	//c = genNewChunk(0, 0);
+	player = (MapObject) { .collision = COLLISION_SPRITE };
+	player.x = 100;
+	player.y = 10;
+
+	//player->moving->onTargetReached = resetStar;
+  	player.moving->onCollision = playerCollision;
+
+  	listInsert(&map->objects, &player);
 }
 
 void OnEnter(struct Gamestate* state)
@@ -62,6 +78,8 @@ void Update(uint32_t a)
 void Draw(Bitmap *b)
 {
 	ClearBitmap(b);
+
+	TiledMap_draw(b, map, 0, 0);
 
 	drawWorld(b, myWorld);
 	//drawChunk(b, c);
