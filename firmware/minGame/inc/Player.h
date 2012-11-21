@@ -7,24 +7,24 @@
 
 
 
-typedef enum Items{
+// typedef enum Items{
 
-	STARTSHOES,
-	SLOWSHOES,
-	FASTSHOES,
-	TURBOSHOES,
+// 	STARTSHOES,
+// 	SLOWSHOES,
+// 	FASTSHOES,
+// 	TURBOSHOES,
 
-	STARTPICKAXE,
-	SLOWPICKAXE,
-	FASTPICKAXE,
-	TURBOPICKAXE,
+// 	STARTPICKAXE,
+// 	SLOWPICKAXE,
+// 	FASTPICKAXE,
+// 	TURBOPICKAXE,
 
-	STARTBACKPACK,
-	SMALLBACKPACK,
-	MEDIUMBACKPACK,
-	BIGBACKPACK,
-	HUGEBACKPACK
-} Items;
+// 	STARTBACKPACK,
+// 	SMALLBACKPACK,
+// 	MEDIUMBACKPACK,
+// 	BIGBACKPACK,
+// 	HUGEBACKPACK
+// } Items;
 
 
 typedef enum MineralTypes{
@@ -36,6 +36,13 @@ typedef enum MineralTypes{
 	MINERALCOUNT
 
 }MineralTypes;
+
+typedef struct Mineral{
+
+	int value;
+
+
+} Mineral;
 
 typedef struct Item{
 
