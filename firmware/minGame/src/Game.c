@@ -6,6 +6,37 @@
 #include <string.h>
 
 #include "Player.h"
+#include "Sprites.h"
+
+
+
+#include <TiledMap.h>
+
+TiledMap *map;
+TileInfo tileInfo[3];
+MapObject player;
+
+void testinit()
+{
+  tileInfo[0] = (TileInfo) {sprt_empty, COLLISION_NONE};
+  tileInfo[1] = (TileInfo) {sprt_earth, COLLISION_BB};
+  tileInfo[2] = (TileInfo) {sprt_diamonds, COLLISION_BB};
+  map = TiledMap_init(20, 20, 16, tileInfo);
+  map->tiles[88] = 1;
+  //memset(&map->tiles[0], 1, map->sizeX * map->sizeY * sizeof(Tile));
+
+  player = (MapObject) {
+    0, 0,
+    sprt_diamonds,
+    16 * PIXEL_RESOLUTION, 16 * PIXEL_RESOLUTION,
+    COLLISION_BB
+  };
+  listInsert(&map->objects, &player);
+}
+
+
+
+
 
 
 void Init(struct Gamestate*);
@@ -34,7 +65,7 @@ Player p1;
 
 void Init(struct Gamestate* state)
 {
-
+testinit();
 }
 
 void OnEnter(struct Gamestate* state)
@@ -47,6 +78,48 @@ void OnLeave(struct Gamestate* state)
 
 void Update(uint32_t a)
 {
+  //int oldPos[] = { player.x, player.y };
+  //      if (GetControllerState1().buttons.Up){
+  //              player.y -= PIXEL_RESOLUTION;
+  //      }
+  //      if (GetControllerState1().buttons.Down){
+  //              player.y += PIXEL_RESOLUTION;
+  //      }
+  //      if (GetControllerState1().buttons.Right){
+  //              player.x += PIXEL_RESOLUTION;
+  //      }
+  //      if (GetControllerState1().buttons.Left){	
+  //              player.x -= PIXEL_RESOLUTION;
+  //      }
+  //if (MObj_collisionMap(map, &player))
+  //{
+  //  // Reset position on collision
+  //  player.x = oldPos[0];
+  //  player.y = oldPos[1];
+  //}
+
+  TiledMap_update(map, a);
+  if (!player.moving)
+  {
+        if (GetControllerState1().buttons.Up){
+          MObj_moveTo(&player, player.x, player.y - (PIXEL_RESOLUTION * map->tileSize), PIXEL_RESOLUTION, true);
+        }
+        if (GetControllerState1().buttons.Down){
+          MObj_moveTo(&player, player.x, player.y + (PIXEL_RESOLUTION * map->tileSize), PIXEL_RESOLUTION, true);
+        }
+        if (GetControllerState1().buttons.Right){
+          MObj_moveTo(&player, player.x + (PIXEL_RESOLUTION * map->tileSize), player.y, PIXEL_RESOLUTION, true);
+        }
+        if (GetControllerState1().buttons.Left){
+          MObj_moveTo(&player, player.x - (PIXEL_RESOLUTION * map->tileSize), player.y, PIXEL_RESOLUTION, true);
+        }
+  }
+
+
+
+
+
+
 	ticks += a;
 	ticks %= 255;
 
@@ -70,6 +143,12 @@ void Draw(Bitmap *b)
 {
 
 	ClearBitmap(b);
+        TiledMap_draw(b, map, 0, 0);
+  setFont(fontwhite8);
+  char *highscoreString;
+  asprintf(&highscoreString, "%d, %d", player.x, player.y);
+  DrawText(b, highscoreString, 0, 8);
+  free(highscoreString);
 
 	isAlive(b);
 }
