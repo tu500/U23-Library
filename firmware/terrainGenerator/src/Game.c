@@ -50,11 +50,47 @@ void Init(struct Gamestate* state)
 
   	listInsert(&map->objects, &player);
 
-  	struct chunk c = genNewChunk(0, 0, 666);
+  	struct chunk c = genNewChunk(1, 1, 666);
   	struct chunk *ptr = &c;
   	ptr->tiles[5].iD = 0;
 
   	saveChunk(ptr);
+
+  	struct chunk *c2 = loadChunk(0, 0, 10);
+}
+
+struct chunk *loadChunk(int x, int y, int height)
+{
+	char name[7];
+	name[0] = '0'; name[1] = ':'; name[2] = 'c'; name[3] = 'k'; name[4] = '_'; name[5] = x; name[6] = y;
+
+	FILE* file = fopen(name, "r+");
+	if(!file) 
+	{
+		fclose(file);
+		return NULL;
+	}
+
+	struct chunk *c;
+	int res = fread(c, 1, 1023, file);
+
+	if(!res) 
+	{
+		if(ferror(file))
+			printf("Error occured\r\n");
+		if(feof(file))
+			printf("EOF occured\r\n");
+		perror("fread()");
+
+		return NULL;
+	}
+
+	while(res < sizeof(struct chunk))
+	{
+		res+=fread(c, 1, 1023, file);
+	}
+
+	return c;
 }
 
 void readFromSD(FILE *file)
@@ -67,22 +103,47 @@ void readFromSD(FILE *file)
 		if(feof(file))
 			printf("EOF occured\r\n");
 		perror("fread()");
-		exit(0);
+		//exit(0);
 	}
 	readcontent[res] = '\0';
 
 	printf("Read raw: %s\n", readcontent);
+
+	bool b = false;
+
+	for(int i = 0; i < 1024; i++)
+	{
+		if(readcontent[i] == 's')
+		{
+			b = true;
+			break;
+		}
+	}
+
+	if(b)
+	{
+		SetLEDs(1 << 2);
+		
+	} else
+	{
+		SetLEDs(1 << 3);
+	}
+
+	Delay(100);
 }
 
 void saveChunk(struct chunk *c)
 {	
 	InitializeFilesystem();
 
-	//Open a file
-	FILE* file = fopen("0:data", "r+");
-	if(!file) {
+	char name[9];
+	name[0] = '0'; name[1] = ':'; name[2] = 'c'; name[3] = 'k'; name[4] = '_'; name[5] = '1'; name[6] = '.'; name[7] = '1'; name[8] = '\0';
+
+	FILE* file = fopen("0:ck_1_1", "r+");
+	if(!file) 
+	{
 		fclose(file);
-		file = fopen("0:data", "w+");
+		file = fopen("0:ck_1_1", "w+");
 		if (!file)
 		{
 			perror("fopen()");
@@ -113,21 +174,7 @@ void saveChunk(struct chunk *c)
 		return;
 	}
 
-	char *highscoreBuf;
-
-	/*for(int i = 0; i < chunkSize; i++)
-	{
-		if(c->tiles[i].iD == 0)
-		{
-			asprintf(&highscoreBuf, "%d:%d", c->tiles[i].x, c->tiles[i].y);
-		}
-	}*/
-
-	asprintf(&highscoreBuf, "%c", 'a');
-
-	printf("WRITE: %s\n", highscoreBuf);
-
-	res = fwrite(highscoreBuf, 1, strlen(highscoreBuf), file);
+	res = fwrite(c, 1, sizeof(struct chunk), file);
 	if(!res) {
 		perror("fwrite()");
 		exit(0);
@@ -139,11 +186,13 @@ void saveChunk(struct chunk *c)
 
 	//readFromSD(file);
 
+	//readFromSD(file);
+
 	//SetLEDs(1 << 2);
 	//Delay(100);
 
 	// //Close file
-	// res = fclose(file);
+	 res = fclose(file);
 	// if(res != 0) {
 	// 	perror("fclose()");
 	// 	ErrorHandler(file);

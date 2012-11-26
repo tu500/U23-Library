@@ -46,5 +46,5 @@ static inline int genRand(int seed, int x, int y);
 
 // TODO:
 // Load / save chunks from / to sdcard
-// struct Chunk *loadChunk(int x, int y, int height);
+struct chunk *loadChunk(int x, int y, int height);
 // void saveChunk(Chunk *c);
