@@ -11,8 +11,18 @@
 
 
 #include <TiledMap.h>
+#include <ChunkedMap.h>
 
-TiledMap *map;
+void loadChunk(Chunk *c, int x, int y)
+{
+  *c = (Chunk) {x,y};
+  c->tiles[15] = 1;
+}
+void saveChunk(Chunk *c)
+{}
+
+//TiledMap *map;
+ChunkedMap *map;
 TileInfo tileInfo[3];
 MapObject player;
 
@@ -21,8 +31,9 @@ void testinit()
   tileInfo[0] = (TileInfo) {sprt_empty, COLLISION_NONE};
   tileInfo[1] = (TileInfo) {sprt_earth, COLLISION_BB};
   tileInfo[2] = (TileInfo) {sprt_diamonds, COLLISION_BB};
-  map = TiledMap_init(20, 20, 16, tileInfo);
-  map->tiles[88] = 1;
+  map = ChunkedMap_init(16, tileInfo, loadChunk, saveChunk);
+  //map = TiledMap_init(20, 20, 16, tileInfo);
+  //map->tiles[88] = 1;
   //memset(&map->tiles[0], 1, map->sizeX * map->sizeY * sizeof(Tile));
 
   player = (MapObject) {
@@ -98,7 +109,8 @@ void Update(uint32_t a)
   //  player.y = oldPos[1];
   //}
 
-  TiledMap_update(map, a);
+  //TiledMap_update(map, a);
+  ChunkedMap_update(map, a);
   if (!player.moving)
   {
         if (GetControllerState1().buttons.Up){
@@ -143,7 +155,8 @@ void Draw(Bitmap *b)
 {
 
 	ClearBitmap(b);
-        TiledMap_draw(b, map, 0, 0);
+        //TiledMap_draw(b, map, 0, 0);
+        ChunkedMap_draw(b, map, 0, 0);
   setFont(fontwhite8);
   char *highscoreString;
   asprintf(&highscoreString, "%d, %d", player.x, player.y);
