@@ -57,6 +57,19 @@ void Init(struct Gamestate* state)
   	saveChunk(ptr);
 
   	struct chunk *c2 = loadChunk(0, 0, 10);
+  	if(c2->x == 1)
+  	{
+  		SetLEDs(1 << 3);
+  		Delay(200);
+  	}else if(c2->x == 0)
+  	{
+  		SetLEDs(1 << 2);
+  		Delay(200);
+  	}else 
+  	{
+  		SetLEDs(1 << 1);
+  		Delay(200);
+  	}
 }
 
 struct chunk *loadChunk(int x, int y, int height)
@@ -72,7 +85,7 @@ struct chunk *loadChunk(int x, int y, int height)
 	}
 
 	struct chunk *c;
-	int res = fread(c, 1, 1023, file);
+	int res = fread(c, 1, sizeof(struct chunk), file);
 
 	if(!res) 
 	{
@@ -87,7 +100,7 @@ struct chunk *loadChunk(int x, int y, int height)
 
 	while(res < sizeof(struct chunk))
 	{
-		res+=fread(c, 1, 1023, file);
+		res+=fread(c, 1, sizeof(struct chunk)-res, file);
 	}
 
 	return c;
@@ -182,7 +195,7 @@ void saveChunk(struct chunk *c)
 		return;
 	}
 
-	free(highscoreBuf);
+	//free(highscoreBuf);
 
 	//readFromSD(file);
 
