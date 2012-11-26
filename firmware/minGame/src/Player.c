@@ -7,23 +7,30 @@
 ///////// ITEM DEFINITIONS /////////
 
 
-//                       INVTA, SPD, SPW, MDM,   INV,    PRZ,   NAME,               DESC
-Item shoesStart =       {  100,   0,   0,   0,     0,      0,   "Start Shoes",      "The Shoes you start with."};
-Item pickaxeStart =     {  100,   2,  -1,   0,     0,      0,   "Start Pickaxe",    "The Pickace you start with."};
-Item backpackStart =    {    0,  -1,  -1,   0,   300,      0,   "Start Backpack",   "The Backpack you start with."};
+//                       INVTA, SPD, SPW, MDM,   INV,    PRZ,   NAME,          DESC
+Item shoesStart =       {  100,   0,   0,   0,     0,      0,   "Begn Shoe",   "The Shoes you start with."};
+Item pickaxeStart =     {  100,   2,  -1,   0,     0,      0,   "Begn Axe",    "The Pickace you start with."};
+Item backpackStart =    {    0,  -1,  -1,   0,   300,      0,   "Begn Pack",   "The Backpack you start with."};
 
-Item shoesSlow =        {  200,   1,   3,   1,     0,    300,   "Slow Shoes",       "Fairly slow shoes. They speed you up somewhat."};
-Item shoesFast =        {  400,   2,   5,   2,     0,    700,   "Fast Shoes",       "Quite good shoes you might want to take for a walk."};
-Item shoesTurbo =       {  700,   3,   9,   3,     0,   1100,   "Turbo Shoes",      "Very good shoes that make you feel incredibly fast."};
+Item shoesSlow =        {  200,   1,   3,   1,     0,    300,   "Slow Shoe",   "Fairly slow shoes. They speed you up somewhat."};
+Item shoesFast =        {  400,   2,   5,   2,     0,    700,   "Fast Shoe",   "Quite good shoes you might want to take for a walk."};
+Item shoesTurbo =       {  700,   3,   9,   3,     0,   1100,   "Turb Shoe",   "Very good shoes that make you feel incredibly fast."};
 
-Item pickaxeSlow =      {  300,   4,  -1,   2,     0,    400,   "Slow Pickaxe",     "A weak Pickaxe. There are better ones."};
-Item pickaxeFast =      {  500,   7,  -2,   4,     0,    700,   "Fast Pickaxe",     "Quite good pickaxe. It gets the job done well."};
-Item pickaxeTurbo =     {  900,  11,  -3,   7,     0,   1300,   "Turbo Pickaxe",    "Awesomely fast pickaxe. You're blazing through rock."};
+Item pickaxeSlow =      {  300,   4,  -1,   2,     0,    400,   "Slow Axe",    "A weak Pickaxe. There are better ones."};
+Item pickaxeFast =      {  500,   7,  -2,   4,     0,    700,   "Fast Axe",    "Quite good pickaxe. It gets the job done well."};
+Item pickaxeTurbo =     {  900,  11,  -3,   7,     0,   1300,   "Turb Axe",    "Awesomely fast pickaxe. You're blazing through rock."};
 
-Item backpackSmall =    {    0,  -1,  -2,   1,   800,    500,   "Small Backpack",   "It can barely hold more than your equiptment."};
-Item backpackMedium =   {    0,  -2,  -3,   3,  1600,    900,   "Medium Backpack",  "It should get you through a few minutes of mining."};
-Item backpackBig =      {    0,  -3,  -4,   6,  2600,   1200,   "Big Backpack",     "This backpack should hold all you'd ever want to carry."};
-Item backpackHuge =     {    0,  -4,  -5,  10,  3300,   1900,   "Huge Backpack",    "This backpack can probably hold more minerals than our world has."};
+Item backpackSmall =    {    0,  -1,  -2,   1,   800,    500,   "Smal Pack",   "It can barely hold more than your equiptment."};
+Item backpackMedium =   {    0,  -2,  -3,   3,  1600,    900,   "Med  Pack",    "It should get you through a few minutes of mining."};
+Item backpackBig =      {    0,  -3,  -4,   6,  2600,   1200,   "Big  Pack",    "This backpack should hold all you'd ever want to carry."};
+Item backpackHuge =     {    0,  -4,  -5,  10,  3300,   1900,   "Huge Pack",   "This backpack can probably hold more minerals than our world has."};
+
+Item* itemList[] =  {
+    &shoesStart,    &pickaxeStart,      &backpackStart,
+    &shoesSlow,     &shoesFast,         &shoesTurbo,
+    &pickaxeSlow,   &pickaxeFast,       &pickaxeTurbo,
+    &backpackSmall, &backpackMedium,    &backpackBig,       &backpackHuge
+};
 
 ///////////// MINERALS /////////////
 
@@ -42,7 +49,7 @@ static const int startSpeedDig = 3;
 static const int startSpeedWalk = 10;
 static const int startMaxDepth = 10;
 static const int startInventorySize = 100;
-static const int startMoney = 0;
+static const int startMoney = 1337;
 
 
 ////////////////////////////////////
@@ -149,6 +156,7 @@ int getFreeInvSpace(Player *p){
     int space = p->inventorySize;
     for(list_el *i = p->inventory.head; i != NULL; i = i->next){
         space -= ((Item*)i->val)->inventorySizeTaken;
+        space += ((Item*)i->val)->inventorySizeMod;
     }
     for(int i = 0; i < MINERALCOUNT ; i++){
         space -= p->minerals[i] * mineralInfo[i].weight;

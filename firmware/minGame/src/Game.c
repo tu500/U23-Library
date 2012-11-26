@@ -7,8 +7,7 @@
 
 #include "Player.h"
 #include "Sprites.h"
-
-
+#include "Menu.h"
 
 #include <TiledMap.h>
 #include <ChunkedMap.h>
@@ -76,7 +75,8 @@ Player p1;
 
 void Init(struct Gamestate* state)
 {
-testinit();
+  testinit();
+  initPlayer(&p1);
 }
 
 void OnEnter(struct Gamestate* state)
@@ -149,6 +149,7 @@ void Update(uint32_t a)
 	}
 	if (GetControllerState1().buttons.L)	tempr -= 20;
 	if (GetControllerState1().buttons.R)	tempr += 20;
+  if (GetControllerState1().buttons.Start) ChangeState(&Menu);
 }
 
 void Draw(Bitmap *b)

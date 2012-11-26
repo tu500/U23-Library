@@ -4,7 +4,6 @@
 
 #include <list.h>
 
-
 typedef enum MineralTypes{
 
     MIN_EARTH,
@@ -60,6 +59,9 @@ bool itemBuy(Player *p, Item *i);
 void validatePlayerValues(Player *p);
 void updateItems(Player *p);
 int getFreeInvSpace(Player *p);
+//Returns amount of specified mineral
+int getMineralAmount(Player *p, MineralTypes m);
+extern Player p1;
 
 #endif
 
