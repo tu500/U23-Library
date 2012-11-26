@@ -157,7 +157,10 @@ void Draw(Bitmap *b)
 
 	ClearBitmap(b);
         //TiledMap_draw(b, map, 0, 0);
-        ChunkedMap_draw(b, map, 0, 0);
+        ChunkedMap_draw(b, map,
+            divRD(-player.x, PIXEL_RESOLUTION) + (SCREEN_X / 2 - 8),
+            divRD(-player.y, PIXEL_RESOLUTION) + (SCREEN_Y / 2 - 8));/**/
+        //ChunkedMap_draw(b, map, 0, 0);
   setFont(fontwhite8);
   char *highscoreString;
   asprintf(&highscoreString, "%d, %d", player.x, player.y);
